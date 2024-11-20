@@ -6,7 +6,7 @@ import secrets
 from trytond.model import DeactivableMixin, ModelSQL, ModelView, fields
 from trytond.cache import Cache, freeze
 from trytond.config import config
-from trytond.pool import Pool
+from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 
 from datetime import datetime, timedelta
@@ -327,7 +327,6 @@ class Session(ModelSQL, ModelView):
     __name__ = 'www.session'
     site = fields.Many2One('www.site', 'Site', required=True)
     session_id = fields.Char('Session ID', required=True)
-    user = fields.Many2One('web.user', 'User')
     system_user = fields.Many2One('res.user', 'System User')
     expiration_date = fields.DateTime('Expiration Date', required=True)
     #TODO: create cron to clean sessions
@@ -389,6 +388,16 @@ class Session(ModelSQL, ModelView):
             seconds=site.session_lifetime)
         session.save()
         return session
+
+
+class SessionWebUser(metaclass=PoolMeta):
+    __name__ = 'www.session'
+    user = fields.Many2One('web.user', 'User')
+
+
+class SessionNereidUser(metaclass=PoolMeta):
+    __name__ = 'www.session'
+    user = fields.Many2One('nereid.user', 'User')
 
 
 class Component(ModelView):

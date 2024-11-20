@@ -6,6 +6,7 @@ from . import voyager
 from . import i18n
 from . import sale
 
+
 def register():
     Pool.register(
         voyager.Site,
@@ -13,6 +14,12 @@ def register():
         voyager.Component,
         i18n.Translation,
         module='voyager', type_='model')
+    Pool.register(
+        voyager.SessionWebUser,
+        module='voyager', type_='model', depends=['web_user'])
+    Pool.register(
+        voyager.SessionNereidUser,
+        module='voyager', type_='model', depends=['nereid_base'])
     Pool.register(
         i18n.TranslationSet,
         i18n.TranslationClean,
